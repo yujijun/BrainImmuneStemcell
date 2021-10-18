@@ -23,39 +23,6 @@ library(RColorBrewer)
 library(ggpubr)
 library(readxl)
 extrafont::loadfonts()
-# Self-defined functions
-convertHumanGeneList <- function(x){
-  require(biomaRt)
-  load(paste0(base_path,"reference_geneset/human_mouse.ensemblid.RData"))
-  genesV2 = getLDS(attributes = c("hgnc_symbol"), filters = "hgnc_symbol", values = x , mart = human, attributesL = c("mgi_symbol"), martL = mouse, uniqueRows=T)
-  humanx <- unique(genesV2[, 2])
-  return(humanx)
-}
-Celltype_marker <- function(top20=top20,Cell_type, cluster){
-  # return Find specific markers from cellmarker reference dataset
-  # top20, is top20 DEgenes which filtered from FindAllmarkers result
-  # Cell_type, is a character of cell type name which could be matched in mouse.immune.cellmarker reference dataset.
-  # cluster, a cluster object in top20
-  tmp_marker <- 
-    mouse.immune.cellmarker[which(mouse.immune.cellmarker$cellName == Cell_type),]
-  tmp_marker <- str_split(tmp_marker$cellMarker,pattern = ",")
-  tmp_marker <- unlist(tmp_marker)
-  tmp_marker <- str_remove_all(tmp_marker,pattern = " ")
-  intersect(top20$gene[which(top20$cluster == cluster)],tmp_marker)
-}
-Celltype_marker_vall <- function(marker_matrix, Cell_type, cluster){
-  # return, Find specific markers from cellmarker reference dataset
-  # marker_matrix, is Whole DEgenes matrix which came from FindAllmarkers result
-  # Cell_type, is a character of cell type name which could be matched in mouse.immune.cellmarker reference dataset.
-  # cluster, a cluster object in top20
-  tmp_marker <- 
-    mouse.immune.cellmarker[which(mouse.immune.cellmarker$cellName == Cell_type),]
-  tmp_marker <- str_split(tmp_marker$cellMarker,pattern = ",")
-  tmp_marker <- unlist(tmp_marker)
-  tmp_marker <- str_remove_all(tmp_marker,pattern = " ")
-  intersect(marker_matrix$gene[which(marker_matrix$cluster == cluster)],tmp_marker)
-}
-#Hyperparameter
 base_path = "/mnt/data/yjj/BrainImmune"
 setwd(base_path)
 input_path = "./input/"
@@ -127,8 +94,36 @@ DimplotDoublet <- DimPlot(control,reduction = "umap",pt.size = 0.5,group.by = "D
   mytheme
 ggsave(filename = paste0(output_fpath,prefix,"01_plotDoublet.pdf"),plot = DimplotDoublet,
        device = "pdf",height = 20,width = 20,units = "cm")
-#### Save proprocessing result ####
+
+
+#### preprocess of control.seuobj.singlet ####
+Idents(control) <- control$DoubletFinder
+control.seuobj.singlet <- subset(control,idents = "Singlet")
+control.seuobj.singlet <- NormalizeData(control.seuobj.singlet, normalization.method = "LogNormalize", scale.factor = 10000)
+control.seuobj.singlet <- FindVariableFeatures(control.seuobj.singlet, selection.method = "vst", nfeatures = 2000)
+control.seuobj.singlet <- ScaleData(control.seuobj.singlet, features = rownames(control.seuobj.singlet))
+control.seuobj.singlet <- RunPCA(control.seuobj.singlet, features = VariableFeatures(control.seuobj.singlet),npcs = 50)
+control.seuobj.singlet <- FindNeighbors(control.seuobj.singlet, dims = 1:pcadim)
+res.used <- seq(0.1,1,by=0.2) #Set different resolutions
+for(i in res.used){
+  control.seuobj.singlet <- FindClusters(object = control.seuobj.singlet, verbose = F, resolution = res.used)
+}
+library(clustree)
+clus.tree.out <- clustree(control.seuobj.singlet) +
+  theme(legend.position = "bottom") + 
+  scale_color_brewer(palette = "Set1") +
+  scale_edge_color_continuous(low = "grey80", high = "red")
+ggsave(filename = paste0(output_fpath,prefix,"01_clustertree.pdf"),plot = clus.tree.out,
+       device = "pdf",height = 20,width = 30,units = "cm")
+control.seuobj.singlet <- RunUMAP(control.seuobj.singlet, dims = 1:20)
+control.seuobj.singlet <- RunTSNE(control.seuobj.singlet, dims = 1:20)
+
 control.seuobj <- control
-save(control.seuobj,file = paste0(output_dpath,prefix,"01_control.seuobj.beforedoublet.RData"))
+save(control.seuobj,file = paste0(output_dpath,prefix,"01_control.seuobj.withdoublet.RData"))
+save(control.seuobj.singlet,file = paste0(output_dpath,prefix,"03_control.seuobj.singlet.RData"))
 control.doublet.meta <- control@meta.data
-save(control.doublet.meta,file = paste0(output_dpath,prefix,"01_control.doublet.meta.RData"))
+save(control.doublet.meta,file = paste0(output_dpath,prefix,"02_control.doublet.meta.RData"))
+
+
+
+

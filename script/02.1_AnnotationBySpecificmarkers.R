@@ -77,7 +77,7 @@ load("./output/data/r1_03_control.seuobj.singlet.RData")
 Idents(control.seuobj.singlet) <-control.seuobj.singlet$RNA_snn_res.0.9
 #### Visualization about cluster situation #### 
 ClusterPlot <- DimPlot(control.seuobj.singlet,
-        cols = my36colors,label = T)
+                       cols = my36colors,label = T)
 ggsave(filename = paste0(output_fpath,prefix,"04_ClusterPlot.pdf"),
        plot = ClusterPlot,
        device = "pdf",height = 20,width = 25,units = "cm")
@@ -90,9 +90,9 @@ top20 <- con.seu.markers %>%
   slice_max(n = 20, order_by = avg_log2FC)
 
 Top20Heatmap <- DoHeatmap(control.seuobj.singlet,
-                         features = top20$gene,
-                         angle = 90,
-                         size = 3) + mytheme
+                          features = top20$gene,
+                          angle = 90,
+                          size = 3) + mytheme
 ggsave(filename = paste0(output_fpath,prefix,"05_Top20Heatmap.pdf"),
        plot = Top20Heatmap,
        device = "pdf",height = 50,width = 40,units = "cm")
@@ -107,9 +107,9 @@ specificmarkers <- c("Kit","Cd34","Cd79a","Cd79b","Cd3g","Cd8b1","Cd4",
                      "C1qa","Ms4a7",
                      "Hba-a1","Car2")
 BiomarkersHeatmap <- DoHeatmap(control.seuobj.singlet,
-                         features = specificmarkers,
-                         angle = 90,
-                         size = 3) + mytheme
+                               features = specificmarkers,
+                               angle = 90,
+                               size = 3) + mytheme
 ggsave(filename = paste0(output_fpath,prefix,"06_BiomarkersHeatmap.pdf"),
        plot = BiomarkersHeatmap,
        device = "pdf",height = 20,width = 30,units = "cm")

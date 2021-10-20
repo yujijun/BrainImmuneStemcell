@@ -161,8 +161,16 @@ pdf(paste0(output_fpath,prefix,"balloonplot.pdf"),
 balloonplot(tab.1)
 dev.off()
 
+#### 10_ pie plot for cell proportion
+tab <- table(control.seuobj.singlet$sum.v2)
+names = names(tab)
+piepercent = paste0(round(100*tab/sum(tab),2), "%")
+names(tab) <- paste0(names,"_",piepercent)
+pdf(paste0(output_fpath,prefix,"10_pie.pdf"),
+    width = 10,height = 10)
+pie(tab,labels = names(tab),col = anno.final.color)
+dev.off()
 
-#### 10_All RaceID3_StemID2 result ####
-#All of the cold in RaceID3_StemID2_sample_main_sampling_FaceID.R 
-#All of the result in `RaceID3_1019` folder.
-
+#### 11_All RaceID3_StemID2 result ####
+#All of the cold in RaceID3_StemID2_sample_main_sampling_FaceID.R  which matched result was in `RaceID3_1019` folder.
+# also filter one outlier cell version in filteroncells.R, which match result was in `RaceID3_1020` folder

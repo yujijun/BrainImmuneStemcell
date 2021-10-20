@@ -72,6 +72,7 @@ load("/mnt/data/yjj/BrainImmune/output/data/r1_03_control.seuobj.singlet.RData")
 04_AIfigure.R # visualization 
 
 ### Output files
+```
 ├── data
 │   ├── r1_01_control.seuobj.withdoublet.RData
 │   ├── r1_02_control.doublet.meta.RData
@@ -131,5 +132,5 @@ load("/mnt/data/yjj/BrainImmune/output/data/r1_03_control.seuobj.singlet.RData")
     ├── r4_7.1_DoHeatmap.pdf
     ├── r4_7.2_DoHeatmap.pdf
     └── r4_7_DoHeatmap.pdf
-
+```
 All r4_* was the final version 

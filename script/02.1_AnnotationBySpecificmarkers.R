@@ -75,14 +75,14 @@ load("./reference/reference_geneset/02_部分免疫细胞_比较明显的区分_
 #### Input dataset #### 
 load("./output/data/r1_03_control.seuobj.singlet.RData")
 Idents(control.seuobj.singlet) <-control.seuobj.singlet$RNA_snn_res.0.9
-#### Visualization about cluster situation #### 
+#### 01_Visualization of cluster id #### 
 ClusterPlot <- DimPlot(control.seuobj.singlet,
                        cols = my36colors,label = T)
 ggsave(filename = paste0(output_fpath,prefix,"04_ClusterPlot.pdf"),
        plot = ClusterPlot,
        device = "pdf",height = 20,width = 25,units = "cm")
 
-#### Find and visualization of top20 markers of cluster ####
+#### 02_Find and visualization of top20 markers of cluster ####
 con.seu.markers <- FindAllMarkers(control.seuobj.singlet,
                                   only.pos = T)
 top20 <- con.seu.markers %>%
@@ -97,7 +97,7 @@ ggsave(filename = paste0(output_fpath,prefix,"05_Top20Heatmap.pdf"),
        plot = Top20Heatmap,
        device = "pdf",height = 50,width = 40,units = "cm")
 
-#### Visualization of Specific markers####
+#### 03_Visualization of Specific markers####
 specificmarkers <- c("Kit","Cd34","Cd79a","Cd79b","Cd3g","Cd8b1","Cd4",
                      "Il7r","Nkg7","Gzma","Gata3","S100a8","S100a9","Camp","Ngp",
                      "Cpa3","Gata2",
@@ -114,5 +114,12 @@ ggsave(filename = paste0(output_fpath,prefix,"06_BiomarkersHeatmap.pdf"),
        plot = BiomarkersHeatmap,
        device = "pdf",height = 20,width = 30,units = "cm")
 
+#### 04_Annotation by marker genes ####
+#annotated result was final saved under `"/mnt/data/yjj/BrainImmune/output/data/r2_control.seuobj.singlet.initmeta.RData`
 
+#### 05_Recluster2125 ####
+#This part of result was put in:"/mnt/data/yjj/BrainImmune/output/data/r2_control2125.final.meta.RData"
+# cluster21 and 25 also be annotated by SingleR in 02.2_Annotation2125bysingleR.R
 
+#### 06_Recluster 9 ####
+#This part of result was put in:"/mnt/data/yjj/BrainImmune/output/data/r2_control9.meta.RData"

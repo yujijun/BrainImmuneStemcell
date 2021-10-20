@@ -31,13 +31,13 @@ mytheme = theme(axis.title = element_text(face = "bold",size = 12,family = "Aria
 ############# input ####
 load("/mnt/data/yjj/BrainImmune/output/data/r2_control.seuobj.singlet.initmeta.RData")
 load("/mnt/data/yjj/BrainImmune/output/data/r2_control2125.final.meta.RData")
-load("/mnt/data/yjj/BrainImmune/output/data/r2_control9.meta.RData")
+load("/mnt/data/yjj/BrainImmune/output/data/r2_control9.meta.RData") #Tcell and NK cells
 load("/mnt/data/yjj/BrainImmune/output/data/r1_03_control.seuobj.singlet.RData")
 
 ############# integration and visualization ####
 control.seuobj.singlet$sum.v2 <- control.seuobj.singlet.initmeta$sum.v1
 control.seuobj.singlet$sum.v2 <- as.character(control.seuobj.singlet$sum.v2)
-control2125.final.meta$sum.v1.1 <- control2125.final.meta$sum
+control2125.final.meta$sum.v1.1 <- control2125.final.meta$sum # Neutrophils vs Precursor cells
 control2125.final.meta$sum.v1.1 <- plyr::mapvalues(
   x = control2125.final.meta$sum.v1.1,
   from = "B plasma cells",

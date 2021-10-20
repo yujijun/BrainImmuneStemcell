@@ -33,5 +33,16 @@ Output:
 --------
 
 
+# > table(control.choosen$sum.v2[colnames(sc@fdata)])
+# 
+# Precursor cells         B cells         T cells        NK cells 
+#              49              94              97              99 
+#            pDCs            ILC2     Neutrophils      Mast cells 
+#              75              98              70               8 
+#       Monocytes            cDCs     Macrophages    Erythrocytes 
+#             100              86              54              96 
+#      Fibroblast 
+#              33 
+
 
 
